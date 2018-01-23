@@ -1,9 +1,12 @@
 const path = require('path')
 
 module.exports = {
-  entry: './client/index',
+  entry: {
+    controller: './client/controller/index',
+    host: './client/host/index'
+  },
   output: {
-    filename: 'bundle.js',
+    filename: 'bundle.[name].js',
     path: path.resolve('./static/game')
   },
   module: {

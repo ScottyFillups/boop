@@ -28,6 +28,4 @@ function animate() {
 animate()
 
 
-const p = () => console.log('hello world')
-
-p()
+console.log('I am the host!')
