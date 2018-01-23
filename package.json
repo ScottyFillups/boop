@@ -12,7 +12,9 @@
     "watch": "webpach --watch"
   },
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "shortid": "^2.2.8",
+    "socket.io": "^2.0.4"
   },
   "devDependencies": {
     "buble-loader": "^0.4.1",
@@ -25,6 +27,7 @@
     "eslint-plugin-standard": "^3.0.1",
     "gyronorm": "^2.0.6",
     "nodemon": "^1.14.11",
+    "socket.io-client": "^2.0.4",
     "three": "^0.89.0",
     "webpack": "^3.10.0"
   }

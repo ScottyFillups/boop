@@ -1,8 +1,7 @@
-const path = require('path')
 const router = require('express').Router()
 
 router.get('/:roomId', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/host.html'))
+  res.redirect(`/controller/${req.params.roomId}`)
 })
 
 module.exports = router

@@ -2,8 +2,12 @@
 
 const http = require('http')
 const app = require('../app')
+const gamify = require('../game/index')
 const server = http.createServer(app)
+const io = require('socket.io')(server)
 const port = process.env.PORT || 8080
+
+gamify(io)
 
 server.listen(port, (err) => {
   if (err) throw err
