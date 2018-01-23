@@ -1,0 +1,12 @@
+language: node_js
+before_script:
+- yarn install
+- yarn run build
+node_js:
+- node
+deploy:
+  app: boopjs
+  provider: heroku
+  skip_cleanup: true
+  api_key:
+    secure: S65f5ks0a+8m7pVddj7M4eowjSlyMbYLGKDRBq6HNzAHNNtRXzSG31urmHygPT4jVcK+0AF1EAyqGC8ihEn/qtKkGEBgjv/c9+5JcxkDb2NlnTPF3zi8EGaBeSo+YE+85h5oj9zv/TnKqytgW30MQf7N5wng2d3thuZkDwFITV+ZO3jZFvvY4i86ZaiGQWt0r/QxlQRMnjkkP8BIZbu0wxXyF2JxLmtToukgDKSyUG2AOKOf7TyjWXyq+v3BOWIWAP0LQ164xP6bw0G1zWskGj5jICH1AFV9tMGrHxixj6SJwZCoDsusEcMKCMFmxxgSkFmIeDqlXAj3+TsaYWs4rCXtFKJJfScIEbxuAL8xAyGIrus07f6+il//uJFu3u9FZk+IxbnAF7sxwTr15vDlnh1hump2oDy5Ug5LEXW+JpD05YxzeVzp4AoaR3AoUYi5mXNk86b2UbtTISNmu9D/IZu7HXD7Il803atRchQrPLA9Zi+62q9A9W3th1viM1ab95JAZL7bd9LbXoU/tMgrE8H9pPIpZI3c0Z1yB0lO2WFabz94EDu47f2iTkNMMPNTo58d30eo40SztsNNdXrNYtIfhGEKXJ0bg/W6Zpfzvz6S0qMvW5u0pOVTWvkwIqWshwoaAXTnKfo/ugKQcBnGnJ1gJYX4m5f4dOsmGFiDn3Q=

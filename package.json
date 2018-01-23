@@ -1,0 +1,26 @@
+{
+  "name": "boop",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "nodemon ./bin/www --ignore /static --ignore /client",
+    "build": "webpack",
+    "watch": "webpach --watch"
+  },
+  "dependencies": {
+    "express": "^4.16.2"
+  },
+  "engines": {
+    "node": "9.0.0"
+  },
+  "devDependencies": {
+    "buble-loader": "^0.4.1",
+    "cannon": "^0.6.2",
+    "gyronorm": "^2.0.6",
+    "nodemon": "^1.14.11",
+    "three": "^0.89.0",
+    "webpack": "^3.10.0"
+  }
+}
