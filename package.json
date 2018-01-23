@@ -9,7 +9,7 @@
     "fix": "eslint . --fix",
     "dev": "nodemon ./bin/www --ignore /static --ignore /client",
     "build": "webpack",
-    "watch": "webpach --watch"
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "express": "^4.16.2",
