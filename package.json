@@ -12,9 +12,6 @@
   "dependencies": {
     "express": "^4.16.2"
   },
-  "engines": {
-    "node": "9.0.0"
-  },
   "devDependencies": {
     "buble-loader": "^0.4.1",
     "cannon": "^0.6.2",
