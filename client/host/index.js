@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import * as CANNON from 'cannon'
-import { GyroNorm } from 'gyronorm'
+// import * as CANNON from 'cannon'
+// import { GyroNorm } from 'gyronorm'
 
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
@@ -16,7 +16,7 @@ const cube = new THREE.Mesh(geometry, material)
 scene.add(cube)
 camera.position.z = 5
 
-function animate() {
+function animate () {
   requestAnimationFrame(animate)
 
   cube.rotation.x += 0.01
@@ -26,6 +26,5 @@ function animate() {
 }
 
 animate()
-
 
 console.log('I am the host!')

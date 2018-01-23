@@ -18,6 +18,7 @@ You should be able to access the site at http://localhost:8080
 
 * __When adding a new feature, create a new branch: do not push to master__
 * __Run `yarn run lint` before you commit__
+  * Run `yarn run fix` to fix any fixable errors
 * Use `yarn run dev` rather than `yarn run start`
 * In a separate tab, run `yarn run watch` to make webpack build client code
 

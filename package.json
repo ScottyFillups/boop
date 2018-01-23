@@ -5,6 +5,8 @@
   "license": "MIT",
   "scripts": {
     "start": "node ./bin/www",
+    "lint": "eslint .",
+    "fix": "eslint . --fix",
     "dev": "nodemon ./bin/www --ignore /static --ignore /client",
     "build": "webpack",
     "watch": "webpach --watch"
@@ -15,6 +17,12 @@
   "devDependencies": {
     "buble-loader": "^0.4.1",
     "cannon": "^0.6.2",
+    "eslint": "^4.16.0",
+    "eslint-config-standard": "^11.0.0-beta.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-node": "^5.2.1",
+    "eslint-plugin-promise": "^3.6.0",
+    "eslint-plugin-standard": "^3.0.1",
     "gyronorm": "^2.0.6",
     "nodemon": "^1.14.11",
     "three": "^0.89.0",
