@@ -53,9 +53,9 @@ input[type="submit"].disabled {
   font-size: 2em;
 	margin: 30px auto;
   width: 80%;
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255,255,255,0.3);
   font-family: 'Roboto', sans-serif;
-  color: #222;
+  color: #111;
 	right: 0;
 	left: 0;
 }

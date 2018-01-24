@@ -45,7 +45,7 @@ world.addContactMaterial(sphere_sphere_cm)
 const stageRadius = 7
 const stageHeight = 0.25
 
-const stageShape = new Cylinder(stageRadius, stageRadius, stageHeight, 32)
+const stageShape = new Cylinder(stageRadius, stageRadius, stageHeight, 10)
 const stageBody = new Body({mass: 0, material: groundMaterial})
 stageBody.addShape(stageShape)
 stageBody.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2)
@@ -64,7 +64,7 @@ scene.add(ambLight)
 scene.add(pointLight)
 addSky(scene)
 
-const stageGeometry = new THREE.CylinderGeometry(stageRadius, stageRadius, 0.25, 32)
+const stageGeometry = new THREE.CylinderGeometry(stageRadius, stageRadius, 0.25, 10)
 const stageMaterial = new THREE.MeshLambertMaterial({color: 0xffff00})
 
 for (var i = 0; i < Object.keys(stageGeometry.faces).length; i++) {
@@ -153,13 +153,13 @@ socket.on('join', (data) => {
   const size = 0.5
 
   // Cannon object
-  const sphereShape = new Sphere(size)
+  const sphereShape = new Sphere(size, 32, 32)
   const sphereBody = new Body({mass: 1, material: sphereMaterial})
   sphereBody.addShape(sphereShape)
   world.add(sphereBody)
 
   // Three.js object
-  const geometry = new THREE.SphereGeometry(size)
+  const geometry = new THREE.SphereGeometry(size, 32, 32)
   const material = new THREE.MeshStandardMaterial({ color: data.color })
   const sphere = new THREE.Mesh(geometry, material)
 
