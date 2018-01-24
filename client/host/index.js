@@ -24,7 +24,9 @@ world.bradphase = new NaiveBroadphase()
 world.solver.iterations = 10
 
 const groundMaterial = new Material('groundMaterial')
-const ground_ground_cm = new ContactMaterial(groundMaterial, groundMaterial, {
+const sphereMaterial = new Material('sphereMaterial')
+
+const ground_sphere_cm = new ContactMaterial(groundMaterial, sphereMaterial, {
   friction: 0.3,
   restitution: 0.3,
   contactEquationStiffness: 1e8,
@@ -32,7 +34,12 @@ const ground_ground_cm = new ContactMaterial(groundMaterial, groundMaterial, {
   frictionEquationStiffness: 1e8,
   frictionEquationRegularizationTime: 3
 })
-world.addContactMaterial(ground_ground_cm)
+const sphere_sphere_cm = new ContactMaterial(sphereMaterial, sphereMaterial, {
+	friction: 0.3,
+	restitution: 0.6,
+})
+world.addContactMaterial(ground_sphere_cm)
+world.addContactMaterial(sphere_sphere_cm)
 
 const stageRadius = 7
 const stageHeight = 0.25
@@ -98,7 +105,7 @@ socket.on('join', (data) => {
 
   // Cannon object
   const sphereShape = new Sphere(size)
-  const sphereBody = new Body({mass: 1, material: groundMaterial})
+  const sphereBody = new Body({mass: 1, material: sphereMaterial})
   sphereBody.addShape(sphereShape)
   world.add(sphereBody)
 
