@@ -6,6 +6,7 @@ import { random } from '../util/math'
 import $ from '../util/dom'
 import addSky from './sky'
 
+let playerCountLock
 let playerCount = 0
 const controllers = {}
 
@@ -36,8 +37,8 @@ const ground_sphere_cm = new ContactMaterial(groundMaterial, sphereMaterial, {
   frictionEquationRegularizationTime: 3
 })
 const sphere_sphere_cm = new ContactMaterial(sphereMaterial, sphereMaterial, {
-	friction: 0.3,
-	restitution: 0.6,
+  friction: 0.3,
+  restitution: 0.6,
 })
 world.addContactMaterial(ground_sphere_cm)
 world.addContactMaterial(sphere_sphere_cm)
@@ -102,32 +103,36 @@ function updatePhysics () {
 function checkGameWin () {
   for (var key in controllers) {
     if (controllers.hasOwnProperty(key)) {
-			const sphereBody = controllers[key].body
-			if (sphereBody.position.y < -20 && controllers[key].isAlive){
-				playerCount--;
-				controllers[key].isAlive = false
-			}
-		}
-	}
-	if(playerCount <= 1){
-		cancelAnimationFrame(animateReq)
-		var winningPlayerName = null
-		for (var key in controllers) {
-			if (controllers.hasOwnProperty(key)) {
-				if (controllers[key].isAlive){
-					winningPlayerName = controllers[key].name
-					break
-				}
-			}
-		}
-		if (winningPlayerName){
-			$('#winBannerHeader').innerHTML = `${winningPlayerName} wins!`
-		}
-		$('#winBanner').classList.remove('hide')
-		playerCount = 2
-		startGame()
-	}
+      const sphereBody = controllers[key].body
+      if (sphereBody.position.y < -20 && controllers[key].isAlive){
+        playerCount--;
+        controllers[key].isAlive = false
+      }
+    }
+  }
+  if(playerCount <= 1){
+    cancelAnimationFrame(animateReq)
+    var winningPlayerName = null
+    for (var key in controllers) {
+      if (controllers.hasOwnProperty(key)) {
+        if (controllers[key].isAlive){
+          winningPlayerName = controllers[key].name
+          break
+        }
+      }
+    }
+    if (winningPlayerName){
+      $('#winBannerHeader').innerHTML = `${winningPlayerName} wins!`
+      $('#winBanner').classList.remove('hide')
+    }
+  }
 }
+
+$('#replay').addEventListener('submit', (e) => {
+  e.preventDefault()
+  playerCount = playerCountLock
+  startGame()
+})
 
 var animateReq;
 function animate () {
@@ -141,19 +146,19 @@ function animate () {
 const size = 0.5
 const startLocations = [[2, 2],[2, -2],[-2, 2],[-2, -2]]
 function startGame() {
-	var locationIndex = 0
-	for (var key in controllers) {
-		if (controllers.hasOwnProperty(key)) {
-			controllers[key].isAlive = true
-			controllers[key].mesh.position.set(startLocations[locationIndex][0], size, startLocations[locationIndex][1])
-			controllers[key].body.position.copy(controllers[key].mesh.position)
-			controllers[key].body.velocity.set(0,0,0)
-			locationIndex++
-		}
-	}
+  var locationIndex = 0
+  for (var key in controllers) {
+    if (controllers.hasOwnProperty(key)) {
+      controllers[key].isAlive = true
+      controllers[key].mesh.position.set(startLocations[locationIndex][0], size + 1, startLocations[locationIndex][1])
+      controllers[key].body.position.copy(controllers[key].mesh.position)
+      controllers[key].body.velocity.set(0,0,0)
+      locationIndex++
+    }
+  }
 
-	$('#winBanner').classList.add('hide')
-	animate()
+  $('#winBanner').classList.add('hide')
+  animate()
 }
 
 socket.on('join', (data) => {
@@ -186,15 +191,15 @@ socket.on('join', (data) => {
   controllers[data.id] = {
     mesh: sphere,
     body: sphereBody,
-	isAlive: false,
-	name: data.name,
+    isAlive: false,
+    name: data.name,
   }
 })
 
 socket.on('data', (data) => {
 
   if (!controllers[data.id].isAlive){
-	  return
+    return
   }
   const magCoeff = 0.15
 
@@ -207,8 +212,8 @@ socket.on('data', (data) => {
   const a = 1 / Math.tan(gammaAbs)
   const b = 1 / Math.tan(betaAbs)
   if (a == Infinity || b == Infinity) {
-		  return
- 	}
+    return
+  }
   const c = Math.sqrt(a * a + b * b)
   const d = (a * b) / c
   const theta = Math.atan(1 / d)
@@ -230,6 +235,7 @@ console.log(`I am the host! ${getRoomId()}`)
 $('#room-id').innerHTML = `Invite code: ${getRoomId()}`
 
 $('#play-game').addEventListener('submit', (e) => {
+  playerCountLock = playerCount
   e.preventDefault()
   document.body.appendChild(renderer.domElement)
   $('#dom').classList.add('hide')
