@@ -7,6 +7,7 @@ Play it here: http://boopjs.herokuapp.com
 ### Installing and running locally
 
 Install [Redis](https://redis.io/topics/quickstart)
+
 In a terminal run `$ redis-server`
 Then, in a separate terminal run:
 ```
