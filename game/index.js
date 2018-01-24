@@ -1,3 +1,5 @@
+const randomColor = require('randomcolor')
+
 function gamify (io, redisClient) {
   const maxConnections = 5
 
@@ -39,14 +41,18 @@ function gamify (io, redisClient) {
           }
 
           if (reply !== '' && io.sockets.sockets[obj.id]) {
+            const color = randomColor()
+
             redisClient.set(roomId, JSON.stringify(Object.assign(obj, {
               count: obj.count + 1
             })))
             hostId = obj.id
             io.sockets.sockets[hostId].emit('join', {
               id: socket.id,
-              name: name
+              name: name,
+              color: color
             })
+            socket.emit('color', color)
           }
         })
 

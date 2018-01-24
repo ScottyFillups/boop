@@ -85,6 +85,7 @@ function animate () {
 socket.on('join', (data) => {
   const $p = document.createElement('p')
   $p.innerHTML = `${data.name} has joined!`
+  $p.style.color = data.color
   $('#entry').appendChild($p)
 
   playerCount++
@@ -104,7 +105,7 @@ socket.on('join', (data) => {
 
   // Three.js object
   const geometry = new THREE.SphereGeometry(size)
-  const material = new THREE.MeshNormalMaterial()
+  const material = new THREE.MeshBasicMaterial({ color: data.color })
   const sphere = new THREE.Mesh(geometry, material)
 
   sphere.position.set(rng(), 10, rng())
@@ -119,36 +120,34 @@ socket.on('join', (data) => {
 })
 
 socket.on('data', (data) => {
-	const magnitude = 0.07
+  const magnitude = 0.07
 
   const sphereBody = controllers[data.id].body
 
-	const alpha = data.alpha
-	const betaAbs = Math.abs(data.beta)
-	const gammaAbs = Math.abs(data.gamma)
+  const alpha = data.alpha
+  const betaAbs = Math.abs(data.beta)
+  const gammaAbs = Math.abs(data.gamma)
 
-	const a = 1/Math.tan(gammaAbs)
-	const b = 1/Math.tan(betaAbs)
-	if (a == Infinity || b == Infinity){
+  const a = 1 / Math.tan(gammaAbs)
+  const b = 1 / Math.tan(betaAbs)
+  if (a == Infinity || b == Infinity) {
 		  return
  	}
-	const c = Math.sqrt(a*a + b*b)
-	const d = (a * b) / c
-	const theta = Math.atan(1/d)
-	const phi = Math.acos(d/a)
-	
-	var offset = data.gamma > 0 ? -Math.PI/2 : Math.PI/2;
-	var direction = (data.beta > 0 && data.gamma < 0) || (data.beta < 0 && data.gamma > 0) ? 1 : -1;
+  const c = Math.sqrt(a * a + b * b)
+  const d = (a * b) / c
+  const theta = Math.atan(1 / d)
+  const phi = Math.acos(d / a)
 
-	const rotation = alpha + offset + (direction * phi)
-	const actualAngle = rotation + (Math.PI/2)
+  var offset = data.gamma > 0 ? -Math.PI / 2 : Math.PI / 2
+  var direction = (data.beta > 0 && data.gamma < 0) || (data.beta < 0 && data.gamma > 0) ? 1 : -1
 
-	sphereBody.applyImpulse(new Vec3(magnitude * Math.cos(actualAngle), 0, -magnitude * Math.sin(actualAngle)), sphereBody.position)
+  const rotation = alpha + offset + (direction * phi)
+  const actualAngle = rotation + (Math.PI / 2)
 
+  sphereBody.applyImpulse(new Vec3(magnitude * Math.cos(actualAngle), 0, -magnitude * Math.sin(actualAngle)), sphereBody.position)
 })
 
 console.log(`I am the host! ${getRoomId()}`)
-
 
 $('#room-id').innerHTML = `Invite code: ${getRoomId()}`
 

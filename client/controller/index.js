@@ -20,6 +20,10 @@ $('#name-form').addEventListener('submit', (e) => {
     name: name
   })
 
+  socket.on('color', (color) => {
+    document.body.style.backgroundColor = color
+  })
+
   socket.on('die', () => {
     socket.emit('die')
   })
