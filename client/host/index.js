@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { ContactMaterial, Material, Vec3, World, NaiveBroadphase, Plane, Body, Sphere, Cylinder } from 'cannon'
 import * as io from 'socket.io-client'
 import { getType, getRoomId } from '../util/url-extractor'
 import { random } from '../util/math'
@@ -13,6 +14,33 @@ socket.emit('init', {
   roomId: getRoomId()
 })
 
+// Cannon setup
+const timestep = 1/60
+const world = new World()
+world.gravity.set(0,0,-9.81)
+world.bradphase = new NaiveBroadphase()
+world.solver.iterations = 10
+
+const groundMaterial = new Material('groundMaterial')
+const ground_ground_cm = new ContactMaterial(groundMaterial, groundMaterial, {
+  friction: 0.3,
+  restitution: 0.3,
+  contactEquationStiffness: 1e8,
+  contactEquationRelaxation: 3,
+  frictionEquationStiffness: 1e8,
+  frictionEquationRegularizationTime: 3,
+});
+world.addContactMaterial(ground_ground_cm)
+
+const stageRadius = 4
+const stageHeight = 0.25
+
+const stageShape = new Cylinder(stageRadius, stageRadius, stageHeight, 32)
+const stageBody = new Body({mass: 0, material: groundMaterial})
+stageBody.addShape(stageShape)
+world.add(stageBody)
+
+// Three.js setup
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer()
