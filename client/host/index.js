@@ -16,9 +16,9 @@ socket.emit('init', {
 })
 
 // Cannon setup
-const timestep = 1/60
+const timestep = 1 / 60
 const world = new World()
-world.gravity.set(0,-9.81,0)
+world.gravity.set(0, -9.81, 0)
 world.bradphase = new NaiveBroadphase()
 world.solver.iterations = 10
 
@@ -29,8 +29,8 @@ const ground_ground_cm = new ContactMaterial(groundMaterial, groundMaterial, {
   contactEquationStiffness: 1e8,
   contactEquationRelaxation: 3,
   frictionEquationStiffness: 1e8,
-  frictionEquationRegularizationTime: 3,
-});
+  frictionEquationRegularizationTime: 3
+})
 world.addContactMaterial(ground_ground_cm)
 
 const stageRadius = 4
@@ -39,7 +39,7 @@ const stageHeight = 0.25
 const stageShape = new Cylinder(stageRadius, stageRadius, stageHeight, 32)
 const stageBody = new Body({mass: 0, material: groundMaterial})
 stageBody.addShape(stageShape)
-stageBody.quaternion.setFromAxisAngle(new Vec3(1,0,0), Math.PI/2)
+stageBody.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2)
 world.add(stageBody)
 
 // Three.js setup
@@ -47,14 +47,14 @@ const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer()
 
-//Set up stage object
+// Set up stage object
 const stageGeometry = new THREE.CylinderGeometry(4, 4, 0.25, 32)
 const stageMaterial = new THREE.MeshBasicMaterial({color: 0xffff00})
 
-for (var i = 0; i < Object.keys(stageGeometry.faces).length; i++){
-	if (stageGeometry.faces[i].normal.y != 0){
-		stageGeometry.faces[i].color.set(0x00ff00)
-	}
+for (var i = 0; i < Object.keys(stageGeometry.faces).length; i++) {
+  if (stageGeometry.faces[i].normal.y != 0) {
+    stageGeometry.faces[i].color.set(0x00ff00)
+  }
 }
 stageMaterial.vertexColors = THREE.FaceColors
 const stage = new THREE.Mesh(stageGeometry, stageMaterial)
@@ -64,16 +64,16 @@ camera.position.z = 10
 camera.position.y = 3
 renderer.setSize(window.innerWidth, window.innerHeight)
 
-function updatePhysics(){
-	world.step(timestep)
-	for (let key in controllers){
-		if (controllers.hasOwnProperty(key)){
-			const sphere = controllers[key].mesh
-			const sphereBody = controllers[key].body
-			sphere.position.copy(sphereBody.position)
-			sphere.quaternion.copy(sphereBody.quaternion)
-		}
-	}
+function updatePhysics () {
+  world.step(timestep)
+  for (let key in controllers) {
+    if (controllers.hasOwnProperty(key)) {
+      const sphere = controllers[key].mesh
+      const sphereBody = controllers[key].body
+      sphere.position.copy(sphereBody.position)
+      sphere.quaternion.copy(sphereBody.quaternion)
+    }
+  }
 }
 
 function animate () {
@@ -82,33 +82,32 @@ function animate () {
   renderer.render(scene, camera)
 }
 
-
-socket.on('join', (id) => {
+socket.on('join', (data) => {
   const $p = document.createElement('p')
-  $p.innerHTML = `Controller ${id} has joined`
+  $p.innerHTML = `Controller ${data.name} has joined`
   $('#entry').appendChild($p)
 
   const size = 0.5
 
-	// Cannon object
+  // Cannon object
   const sphereShape = new Sphere(size)
   const sphereBody = new Body({mass: 1, material: groundMaterial})
   sphereBody.addShape(sphereShape)
-	world.add(sphereBody)
+  world.add(sphereBody)
 
-	// Three.js object
-	const geometry = new THREE.SphereGeometry(size)
-	const material = new THREE.MeshNormalMaterial()
-	const sphere = new THREE.Mesh(geometry, material)
+  // Three.js object
+  const geometry = new THREE.SphereGeometry(size)
+  const material = new THREE.MeshNormalMaterial()
+  const sphere = new THREE.Mesh(geometry, material)
 
-	sphere.position.set(rng(),10,rng())
-	sphereBody.position.copy(sphere.position)
+  sphere.position.set(rng(), 10, rng())
+  sphereBody.position.copy(sphere.position)
 
-	scene.add(sphere)
+  scene.add(sphere)
 
-  controllers[id] = {
-    mesh: sphere,
-		body: sphereBody,
+  controllers[data.id] = {
+    mesh: cube,
+    body: cubeBody
   }
 })
 
@@ -119,7 +118,6 @@ socket.on('data', (data) => {
 })
 
 console.log(`I am the host! ${getRoomId()}`)
-
 
 $('#play-game').addEventListener('submit', (e) => {
   e.preventDefault()
