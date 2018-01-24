@@ -11,6 +11,10 @@ socket.emit('init', {
   roomId: getRoomId()
 })
 
+socket.on('die', () => {
+  socket.emit('die')
+})
+
 gn.init().then(function () {
   gn.start((data) => {
     for (let key in data.do) {
