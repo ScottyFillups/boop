@@ -5,15 +5,16 @@
   </head>
   <body>
     <h1>Boop!</h1>
-    <form>
+    <form id="invite-form" action="">
       <p>Join a room: </p>
-      <input type="text">
-      <button>Join</button>
+      <input id="roomid-input" type="text">
+      <input type="submit" value="Join">
     </form>
-    <form>
+    <form action="/create" method="GET">
       <p>Create a new room</p>
-      <button>Create</button>
+      <input type="submit" value="Create">
     </form>
+    <script src="/game/bundle.home.js"></script>
   </body>
 </html>
 

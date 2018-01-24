@@ -1,6 +1,6 @@
 function _extract (type) {
   const parse = /\/(controller|host)\/(.*)/g.exec(window.location.pathname)
-  
+
   return parse !== null ? parse[type] : null
 }
 

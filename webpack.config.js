@@ -3,7 +3,8 @@ const path = require('path')
 module.exports = {
   entry: {
     controller: './client/controller/index',
-    host: './client/host/index'
+    host: './client/host/index',
+    home: './client/home/index'
   },
   output: {
     filename: 'bundle.[name].js',

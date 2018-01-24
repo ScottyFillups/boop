@@ -23,13 +23,12 @@ const cube = new THREE.Mesh(geometry, material)
 scene.add(cube)
 camera.position.z = 5
 
-function animate() {
-    requestAnimationFrame(animate)
-    renderer.render(scene, camera)
+function animate () {
+  requestAnimationFrame(animate)
+  renderer.render(scene, camera)
 }
 
 animate()
-
 
 socket.on('data', (data) => {
   console.log(data.beta, data.gamma, data.alpha)

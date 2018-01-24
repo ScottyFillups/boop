@@ -8,9 +8,10 @@ function gamify (io, redisClient) {
 
       console.log('init called')
       if (type === 'host') {
-        redisClient.set(roomId, socket.id) 
+        redisClient.set(roomId, socket.id)
       } else {
         redisClient.get(roomId, (err, reply) => {
+          if (err) throw err
           hostId = reply
         })
       }
