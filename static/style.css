@@ -32,10 +32,17 @@ input[type="text"] {
 input[type="submit"] {
   font-size: 1em;
   margin: 5px;
+  cursor: pointer;
   font-family: 'Roboto', sans-serif;
   background-color: transparent;
   background-image: none;
   border-radius: 5px;
   border: 1px solid #14c4ff;
   color: #14c4ff;
+}
+
+input[type="submit"].disabled {
+  cursor: wait;
+  border-color: #ddd;
+  color: #ddd;
 }

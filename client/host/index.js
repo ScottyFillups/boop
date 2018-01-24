@@ -5,6 +5,7 @@ import { getType, getRoomId } from '../util/url-extractor'
 import { random } from '../util/math'
 import $ from '../util/dom'
 
+let playerCount = 0
 const controllers = {}
 
 const socket = io('/')
@@ -83,8 +84,15 @@ function animate () {
 
 socket.on('join', (data) => {
   const $p = document.createElement('p')
-  $p.innerHTML = `Controller ${data.name} has joined`
+  $p.innerHTML = `${data.name} has joined!`
   $('#entry').appendChild($p)
+
+  playerCount++
+  if (playerCount >= 2) {
+    $('#start').classList.remove('disabled')
+    $('#start').disabled = false
+    $('#msg').innerHTML = `${4 - playerCount} spots left`
+  }
 
   const size = 0.5
 
@@ -140,6 +148,9 @@ socket.on('data', (data) => {
 })
 
 console.log(`I am the host! ${getRoomId()}`)
+
+
+$('#room-id').innerHTML = `Invite code: ${getRoomId()}`
 
 $('#play-game').addEventListener('submit', (e) => {
   e.preventDefault()
