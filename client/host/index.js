@@ -33,7 +33,7 @@ const ground_ground_cm = new ContactMaterial(groundMaterial, groundMaterial, {
 })
 world.addContactMaterial(ground_ground_cm)
 
-const stageRadius = 4
+const stageRadius = 7
 const stageHeight = 0.25
 
 const stageShape = new Cylinder(stageRadius, stageRadius, stageHeight, 32)
@@ -47,8 +47,7 @@ const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer()
 
-// Set up stage object
-const stageGeometry = new THREE.CylinderGeometry(4, 4, 0.25, 32)
+const stageGeometry = new THREE.CylinderGeometry(stageRadius, stageRadius, 0.25, 32)
 const stageMaterial = new THREE.MeshBasicMaterial({color: 0xffff00})
 
 for (var i = 0; i < Object.keys(stageGeometry.faces).length; i++) {
@@ -60,7 +59,7 @@ stageMaterial.vertexColors = THREE.FaceColors
 const stage = new THREE.Mesh(stageGeometry, stageMaterial)
 scene.add(stage)
 
-camera.position.z = 10
+camera.position.z = 15
 camera.position.y = 3
 renderer.setSize(window.innerWidth, window.innerHeight)
 
@@ -112,9 +111,33 @@ socket.on('join', (data) => {
 })
 
 socket.on('data', (data) => {
-  const sphere = controllers[data.id].mesh
+	const magnitude = 0.07
 
-  console.log(data.beta, data.gamma, data.alpha)
+  const sphereBody = controllers[data.id].body
+
+  //console.log(data.beta, data.gamma, data.alpha)
+
+	const betaAbs = Math.abs(data.beta)
+	const gammaAbs = Math.abs(data.gamma)
+
+	const a = 1/Math.tan(gammaAbs)
+	const b = 1/Math.tan(betaAbs)
+	if (a == Infinity || b == Infinity){
+		  return
+ 	}
+	const c = Math.sqrt(a*a + b*b)
+	const d = (a * b) / c
+	const theta = Math.atan(1/d)
+	const phi = Math.acos(d/a)
+	
+	var offset = data.gamma > 0 ? -Math.PI/2 : Math.PI/2;
+	var direction = (data.beta > 0 && data.gamma < 0) || (data.beta < 0 && data.gamma > 0) ? 1 : -1;
+
+	const rotation = offset + (direction * phi)
+	const actualAngle = rotation + (Math.PI/2)
+
+	sphereBody.applyImpulse(new Vec3(magnitude * Math.cos(actualAngle), 0, -magnitude * Math.sin(actualAngle)), sphereBody.position)
+
 })
 
 console.log(`I am the host! ${getRoomId()}`)
