@@ -100,13 +100,23 @@ function checkGameWin () {
 			if (sphereBody.position.y < -20 && controllers[key].isAlive){
 				playerCount--;
 				controllers[key].isAlive = false
-				console.log("Player removed: " + key)
 			}
 		}
 	}
 	if(playerCount <= 1){
-		console.log("Game is won")
 		cancelAnimationFrame(animateReq)
+		var winningPlayerName = null
+		for (var key in controllers) {
+			if (controllers.hasOwnProperty(key)) {
+				if (controllers[key].isAlive){
+					winningPlayerName = controllers[key].name
+					break
+				}
+			}
+		}
+		if (winningPlayerName){
+			$('#winBannerHeader').innerHTML = `Player ${winningPlayerName} has won!`
+		}
 		$('#winBanner').classList.remove('hide')
 	}
 }
@@ -156,6 +166,7 @@ socket.on('join', (data) => {
     mesh: sphere,
     body: sphereBody,
 		isAlive: true,
+		name: data.name,
   }
 })
 
