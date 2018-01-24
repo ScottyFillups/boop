@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { ContactMaterial, Material, Vec3, World, NaiveBroadphase, Plane, Body, Sphere, Cylinder } from 'cannon'
+import { ContactMaterial, Material, Vec3, World, NaiveBroadphase, Plane, Body, Sphere, Cylinder, Box } from 'cannon'
 import * as io from 'socket.io-client'
 import { getType, getRoomId } from '../util/url-extractor'
 import { random } from '../util/math'
@@ -63,24 +63,48 @@ camera.position.y = 3
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
+function updatePhysics(){
+	world.step(timestep)
+	for (let key in controllers){
+		if (controllers.hasOwnProperty(key)){
+			const cube = controllers[key].mesh
+			const cubeBody = controllers[key].body
+			cube.position.copy(cubeBody.position)
+			cube.quaternion.copy(cubeBody.quaternion)
+		}
+	}
+}
+
 function animate () {
   requestAnimationFrame(animate)
+  updatePhysics()
   renderer.render(scene, camera)
 }
 
 animate()
 
 socket.on('join', (id) => {
-  const geometry = new THREE.BoxGeometry(1,1,1)
+
+  const size = 0.5
+  // Create cannon object
+  const cubeShape = new Box(new Vec3(size,size,size))
+  const cubeBody = new Body({mass: 1, material: groundMaterial})
+  cubeBody.addShape(cubeShape)
+  world.add(cubeBody)
+
+  // Create Three.js object
+  const geometry = new THREE.BoxGeometry(size*2,size*2,size*2)
   const material = new THREE.MeshNormalMaterial()
   const cube = new THREE.Mesh(geometry, material)
 
-  cube.position.set(rng(),rng(),rng())
+  cube.position.set(rng(),10, 0)
+  cubeBody.position.copy(cube.position)
 
   scene.add(cube)
 
   controllers[id] = {
-    mesh: cube
+    mesh: cube,
+	body: cubeBody,
   }
 })
 
@@ -88,9 +112,9 @@ socket.on('data', (data) => {
   const cube = controllers[data.id].mesh
 
   console.log(data.beta, data.gamma, data.alpha)
-  cube.rotation.x = data.beta
-  cube.rotation.y = data.gamma
-  cube.rotation.z = data.alpha
+  //cube.rotation.x = data.beta
+  //cube.rotation.y = data.gamma
+  //cube.rotation.z = data.alpha
 })
 
 console.log(`I am the host! ${getRoomId()}`)
