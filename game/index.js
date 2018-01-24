@@ -27,6 +27,11 @@ function gamify (io, redisClient) {
 
           if (err) throw err
 
+          if (!obj) {
+            console.log('room does not exist')
+            return
+          }
+
           if (obj.count >= maxConnections || obj.locked) {
             console.log('no join emitted')
             redisClient.set(roomId, JSON.stringify(Object.assign(obj, { locked: true })))
