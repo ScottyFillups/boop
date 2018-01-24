@@ -125,10 +125,18 @@ var animateReq;
 function animate () {
   animateReq = requestAnimationFrame(animate)
   updatePhysics()
-	checkGameWin()
+  checkGameWin()
   renderer.render(scene, camera)
 }
 
+function startGame() {
+	for (var key in controllers) {
+		if (controllers.hasOwnProperty(key)) {
+			controllers[key].isAlive = true
+		}
+	}
+	animate()
+}
 
 const startLocations = [[2, 2],[2, -2],[-2, 2],[-2, -2]]
 socket.on('join', (data) => {
@@ -165,12 +173,16 @@ socket.on('join', (data) => {
   controllers[data.id] = {
     mesh: sphere,
     body: sphereBody,
-		isAlive: true,
-		name: data.name,
+	isAlive: false,
+	name: data.name,
   }
 })
 
 socket.on('data', (data) => {
+
+  if (!controllers[data.id].isAlive){
+	  return
+  }
   const magnitude = 0.07
 
   const sphereBody = controllers[data.id].body
@@ -206,5 +218,5 @@ $('#play-game').addEventListener('submit', (e) => {
   e.preventDefault()
   document.body.appendChild(renderer.domElement)
   $('#dom').classList.add('hide')
-  animate()
+  startGame()
 })
