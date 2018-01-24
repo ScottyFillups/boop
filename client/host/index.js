@@ -55,6 +55,9 @@ const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer()
 
+// Background
+//scene.background = new THREE.Color().setHSL(0.6,0,1)
+
 const stageGeometry = new THREE.CylinderGeometry(stageRadius, stageRadius, 0.25, 32)
 const stageMaterial = new THREE.MeshBasicMaterial({color: 0xffff00})
 
@@ -67,24 +70,12 @@ stageMaterial.vertexColors = THREE.FaceColors
 const stage = new THREE.Mesh(stageGeometry, stageMaterial)
 scene.add(stage)
 
-// Test sphere
-const testSize = 0.5
-
-// Cannon object
-const testSphereShape = new Sphere(testSize)
-const testSphereBody = new Body({mass: 1, material: sphereMaterial})
-testSphereBody.addShape(testSphereShape)
-world.add(testSphereBody)
-
-// Three.js object
-const geometry = new THREE.SphereGeometry(testSize)
-const material = new THREE.MeshNormalMaterial()
-const testSphere = new THREE.Mesh(geometry, material)
-
-testSphere.position.set(0, 1, 0)
-testSphereBody.position.copy(testSphere.position)
-
-scene.add(testSphere)
+//Lights
+var hemiLight = new THREE.HemisphereLight(0xffffff,0xffffff, 0.6)
+hemiLight.color.setHSL(0.6,1,0.6)
+hemiLight.groundColor.setHSL(0.095,1,0.75)
+hemiLight.position.set(0,50,0)
+scene.add(hemiLight)
 
 camera.position.z = 15
 camera.position.y = 3
@@ -100,8 +91,6 @@ function updatePhysics () {
       sphere.quaternion.copy(sphereBody.quaternion)
     }
   }
-	testSphere.position.copy(testSphereBody.position)
-	testSphere.quaternion.copy(testSphereBody.quaternion)
 }
 
 function animate () {
