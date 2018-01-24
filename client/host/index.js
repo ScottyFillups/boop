@@ -99,6 +99,8 @@ function animate () {
   renderer.render(scene, camera)
 }
 
+
+const startLocations = [[2, 2],[2, -2],[-2, 2],[-2, -2]]
 socket.on('join', (data) => {
   const $p = document.createElement('p')
   $p.innerHTML = `${data.name} has joined!`
@@ -125,7 +127,7 @@ socket.on('join', (data) => {
   const material = new THREE.MeshBasicMaterial({ color: data.color })
   const sphere = new THREE.Mesh(geometry, material)
 
-  sphere.position.set(rng(), 10, rng())
+  sphere.position.set(startLocations[playerCount-1][0], size, startLocations[playerCount-1][1])
   sphereBody.position.copy(sphere.position)
 
   scene.add(sphere)
