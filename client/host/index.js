@@ -93,9 +93,29 @@ function updatePhysics () {
   }
 }
 
+function checkGameWin () {
+  for (var key in controllers) {
+    if (controllers.hasOwnProperty(key)) {
+			const sphereBody = controllers[key].body
+			if (sphereBody.position.y < -20 && controllers[key].isAlive){
+				playerCount--;
+				controllers[key].isAlive = false
+				console.log("Player removed: " + key)
+			}
+		}
+	}
+	if(playerCount <= 1){
+		console.log("Game is won")
+		cancelAnimationFrame(animateReq)
+		$('#winBanner').classList.remove('hide')
+	}
+}
+
+var animateReq;
 function animate () {
-  requestAnimationFrame(animate)
+  animateReq = requestAnimationFrame(animate)
   updatePhysics()
+	checkGameWin()
   renderer.render(scene, camera)
 }
 
@@ -134,7 +154,8 @@ socket.on('join', (data) => {
 
   controllers[data.id] = {
     mesh: sphere,
-    body: sphereBody
+    body: sphereBody,
+		isAlive: true,
   }
 })
 
