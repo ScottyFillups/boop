@@ -3,4 +3,5 @@
 *.swp
 bundle.*.js
 bundle.*.map
+dump.rdb
 

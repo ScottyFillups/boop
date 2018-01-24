@@ -6,8 +6,8 @@ function gamify (io, redisClient) {
       const { roomId, type } = data
       socket.join(roomId)
 
+      console.log('init called')
       if (type === 'host') {
-        console.log(`host: ${socket.id}`)
         redisClient.set(roomId, socket.id) 
       } else {
         redisClient.get(roomId, (err, reply) => {
@@ -16,10 +16,7 @@ function gamify (io, redisClient) {
       }
     })
     socket.on('data', (data) => {
-      console.log(`Received ${data}`) 
       if (hostId) {
-        console.log(`This was sent to host, ${hostId}`)
-        //console.log(io.sockets.sockets)
         io.sockets.sockets[hostId].emit('data', data)
       }
     })
