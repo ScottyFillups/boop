@@ -22,6 +22,12 @@ function gamify (io, redisClient) {
           redisClient.set(roomId, '')
           io.to(roomId).emit('die')
         })
+
+        socket.on('lock', () => {
+          redisClient.get(roomId, (err, reply) => {
+            redisClient.set(roomId, JSON.stringify(Object.assign(JSON.parse(reply), { locked: true })))
+          })
+        })
       } else {
         redisClient.get(roomId, (err, reply) => {
           console.log(reply)
