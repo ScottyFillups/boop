@@ -166,10 +166,7 @@ socket.on('join', (data) => {
     mesh: sphere,
     body: sphereBody,
 		isAlive: true,
-<<<<<<< HEAD
 		name: data.name,
-=======
->>>>>>> bba3d16393eebbffcd08273d96f16c6420c3b97f
   }
 })
 
