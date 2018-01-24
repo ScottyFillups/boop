@@ -4,7 +4,7 @@ function gamify (io, redisClient) {
   io.on('connection', (socket) => {
     socket.on('init', (data) => {
       let hostId
-      const { roomId, type } = data
+      const { roomId, type, name } = data
 
       socket.join(roomId)
       clientType = type
@@ -38,7 +38,10 @@ function gamify (io, redisClient) {
               count: obj.count + 1
             })))
             hostId = obj.id
-            io.sockets.sockets[hostId].emit('join', socket.id)
+            io.sockets.sockets[hostId].emit('join', {
+              id: socket.id,
+              name: name
+            })
           }
         })
 

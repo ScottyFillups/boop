@@ -83,9 +83,9 @@ function animate () {
 }
 
 
-socket.on('join', (id) => {
+socket.on('join', (data) => {
   const $p = document.createElement('p')
-  $p.innerHTML = `Controller ${id} has joined`
+  $p.innerHTML = `Controller ${data.name} has joined`
   $('#entry').appendChild($p)
 
   const size = 0.5
@@ -105,7 +105,7 @@ socket.on('join', (id) => {
 
   scene.add(cube)
 
-  controllers[id] = {
+  controllers[data.id] = {
     mesh: cube,
     body: cubeBody,
   }
