@@ -124,6 +124,8 @@ function checkGameWin () {
 			$('#winBannerHeader').innerHTML = `${winningPlayerName} wins!`
 		}
 		$('#winBanner').classList.remove('hide')
+		playerCount = 2
+		startGame()
 	}
 }
 
@@ -135,16 +137,25 @@ function animate () {
   renderer.render(scene, camera)
 }
 
+
+const size = 0.5
+const startLocations = [[2, 2],[2, -2],[-2, 2],[-2, -2]]
 function startGame() {
+	var locationIndex = 0
 	for (var key in controllers) {
 		if (controllers.hasOwnProperty(key)) {
 			controllers[key].isAlive = true
+			controllers[key].mesh.position.set(startLocations[locationIndex][0], size, startLocations[locationIndex][1])
+			controllers[key].body.position.copy(controllers[key].mesh.position)
+			controllers[key].body.velocity.set(0,0,0)
+			locationIndex++
 		}
 	}
+
+	$('#winBanner').classList.add('hide')
 	animate()
 }
 
-const startLocations = [[2, 2],[2, -2],[-2, 2],[-2, -2]]
 socket.on('join', (data) => {
   const $p = document.createElement('p')
   $p.innerHTML = `${data.name} has joined!`
@@ -158,7 +169,6 @@ socket.on('join', (data) => {
     $('#msg').innerHTML = `${4 - playerCount} spots left`
   }
 
-  const size = 0.5
 
   // Cannon object
   const sphereShape = new Sphere(size)
@@ -170,9 +180,6 @@ socket.on('join', (data) => {
   const geometry = new THREE.SphereGeometry(size)
   const material = new THREE.MeshStandardMaterial({ color: data.color })
   const sphere = new THREE.Mesh(geometry, material)
-
-  sphere.position.set(startLocations[playerCount-1][0], size, startLocations[playerCount-1][1])
-  sphereBody.position.copy(sphere.position)
 
   scene.add(sphere)
 
@@ -189,7 +196,7 @@ socket.on('data', (data) => {
   if (!controllers[data.id].isAlive){
 	  return
   }
-  const magnitude = 0.07
+  const magCoeff = 0.07
 
   const sphereBody = controllers[data.id].body
 
@@ -212,6 +219,7 @@ socket.on('data', (data) => {
 
   const rotation = alpha + offset + (direction * phi)
   const actualAngle = rotation + (Math.PI / 2)
+  const magnitude = magCoeff
 
   sphereBody.applyImpulse(new Vec3(magnitude * Math.cos(actualAngle), 0, -magnitude * Math.sin(actualAngle)), sphereBody.position)
 })
