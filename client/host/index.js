@@ -25,7 +25,9 @@ world.bradphase = new NaiveBroadphase()
 world.solver.iterations = 10
 
 const groundMaterial = new Material('groundMaterial')
-const ground_ground_cm = new ContactMaterial(groundMaterial, groundMaterial, {
+const sphereMaterial = new Material('sphereMaterial')
+
+const ground_sphere_cm = new ContactMaterial(groundMaterial, sphereMaterial, {
   friction: 0.3,
   restitution: 0.3,
   contactEquationStiffness: 1e8,
@@ -33,7 +35,12 @@ const ground_ground_cm = new ContactMaterial(groundMaterial, groundMaterial, {
   frictionEquationStiffness: 1e8,
   frictionEquationRegularizationTime: 3
 })
-world.addContactMaterial(ground_ground_cm)
+const sphere_sphere_cm = new ContactMaterial(sphereMaterial, sphereMaterial, {
+	friction: 0.3,
+	restitution: 0.6,
+})
+world.addContactMaterial(ground_sphere_cm)
+world.addContactMaterial(sphere_sphere_cm)
 
 const stageRadius = 7
 const stageHeight = 0.25
@@ -69,6 +76,13 @@ stageMaterial.vertexColors = THREE.FaceColors
 const stage = new THREE.Mesh(stageGeometry, stageMaterial)
 scene.add(stage)
 
+//Lights
+var hemiLight = new THREE.HemisphereLight(0xffffff,0xffffff, 0.6)
+hemiLight.color.setHSL(0.6,1,0.6)
+hemiLight.groundColor.setHSL(0.095,1,0.75)
+hemiLight.position.set(0,50,0)
+scene.add(hemiLight)
+
 camera.position.z = 15
 camera.position.y = 3
 renderer.setSize(window.innerWidth, window.innerHeight)
@@ -85,12 +99,44 @@ function updatePhysics () {
   }
 }
 
+function checkGameWin () {
+  for (var key in controllers) {
+    if (controllers.hasOwnProperty(key)) {
+			const sphereBody = controllers[key].body
+			if (sphereBody.position.y < -20 && controllers[key].isAlive){
+				playerCount--;
+				controllers[key].isAlive = false
+			}
+		}
+	}
+	if(playerCount <= 1){
+		cancelAnimationFrame(animateReq)
+		var winningPlayerName = null
+		for (var key in controllers) {
+			if (controllers.hasOwnProperty(key)) {
+				if (controllers[key].isAlive){
+					winningPlayerName = controllers[key].name
+					break
+				}
+			}
+		}
+		if (winningPlayerName){
+			$('#winBannerHeader').innerHTML = `Player ${winningPlayerName} has won!`
+		}
+		$('#winBanner').classList.remove('hide')
+	}
+}
+
+var animateReq;
 function animate () {
-  requestAnimationFrame(animate)
+  animateReq = requestAnimationFrame(animate)
   updatePhysics()
+	checkGameWin()
   renderer.render(scene, camera)
 }
 
+
+const startLocations = [[2, 2],[2, -2],[-2, 2],[-2, -2]]
 socket.on('join', (data) => {
   const $p = document.createElement('p')
   $p.innerHTML = `${data.name} has joined!`
@@ -108,7 +154,7 @@ socket.on('join', (data) => {
 
   // Cannon object
   const sphereShape = new Sphere(size)
-  const sphereBody = new Body({mass: 1, material: groundMaterial})
+  const sphereBody = new Body({mass: 1, material: sphereMaterial})
   sphereBody.addShape(sphereShape)
   world.add(sphereBody)
 
@@ -117,14 +163,16 @@ socket.on('join', (data) => {
   const material = new THREE.MeshLambertMaterial({ color: data.color })
   const sphere = new THREE.Mesh(geometry, material)
 
-  sphere.position.set(rng(), 10, rng())
+  sphere.position.set(startLocations[playerCount-1][0], size, startLocations[playerCount-1][1])
   sphereBody.position.copy(sphere.position)
 
   scene.add(sphere)
 
   controllers[data.id] = {
     mesh: sphere,
-    body: sphereBody
+    body: sphereBody,
+		isAlive: true,
+		name: data.name,
   }
 })
 
