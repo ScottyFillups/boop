@@ -1,15 +1,20 @@
 #!/usr/bin/env node
 
+const webPort = process.env.PORT || 8080
+const redisPort = process.env.REDIS_URL || 6379
+
 const http = require('http')
+const redis = require('redis')
 const app = require('../app')
 const gamify = require('../game/index')
+
+const redisClient = redis.createClient(redisPort)
 const server = http.createServer(app)
 const io = require('socket.io')(server)
-const port = process.env.PORT || 8080
 
-gamify(io)
+gamify(io, redisClient)
 
-server.listen(port, (err) => {
+server.listen(webPort, (err) => {
   if (err) throw err
-  console.log(`Server is listening on port ${port}`)
+  console.log(`Server is listening on port ${webPort}`)
 })
