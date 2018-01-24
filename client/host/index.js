@@ -4,6 +4,7 @@ import * as io from 'socket.io-client'
 import { getType, getRoomId } from '../util/url-extractor'
 import { random } from '../util/math'
 import $ from '../util/dom'
+import addSky from './sky'
 
 let playerCount = 0
 const controllers = {}
@@ -44,12 +45,20 @@ stageBody.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2)
 world.add(stageBody)
 
 // Three.js setup
+const ambLight = new THREE.AmbientLight(0xaaaaaa, 1)
+const pointLight = new THREE.PointLight(0xff0000, 1, 100)
 const scene = new THREE.Scene()
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000000)
 const renderer = new THREE.WebGLRenderer()
 
+pointLight.position.set(0, 2, -10)
+scene.background = new THREE.Color(0x6aa2fc)
+scene.add(ambLight)
+scene.add(pointLight)
+addSky(scene)
+
 const stageGeometry = new THREE.CylinderGeometry(stageRadius, stageRadius, 0.25, 32)
-const stageMaterial = new THREE.MeshBasicMaterial({color: 0xffff00})
+const stageMaterial = new THREE.MeshLambertMaterial({color: 0xffff00})
 
 for (var i = 0; i < Object.keys(stageGeometry.faces).length; i++) {
   if (stageGeometry.faces[i].normal.y != 0) {
@@ -105,7 +114,7 @@ socket.on('join', (data) => {
 
   // Three.js object
   const geometry = new THREE.SphereGeometry(size)
-  const material = new THREE.MeshBasicMaterial({ color: data.color })
+  const material = new THREE.MeshLambertMaterial({ color: data.color })
   const sphere = new THREE.Mesh(geometry, material)
 
   sphere.position.set(rng(), 10, rng())
