@@ -17,7 +17,21 @@ const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 const renderer = new THREE.WebGLRenderer()
 
+//Set up stage object
+const stageGeometry = new THREE.CylinderGeometry(4, 4, 0.25, 32)
+const stageMaterial = new THREE.MeshBasicMaterial({color: 0xffff00})
+
+for (var i = 0; i < Object.keys(stageGeometry.faces).length; i++){
+	if (stageGeometry.faces[i].normal.y != 0){
+		stageGeometry.faces[i].color.set(0x00ff00)
+	}
+}
+stageMaterial.vertexColors = THREE.FaceColors
+const stage = new THREE.Mesh(stageGeometry, stageMaterial)
+scene.add(stage)
+
 camera.position.z = 10
+camera.position.y = 3
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
@@ -27,7 +41,6 @@ function animate () {
 }
 
 animate()
-
 
 socket.on('join', (id) => {
   const geometry = new THREE.BoxGeometry(1,1,1)
