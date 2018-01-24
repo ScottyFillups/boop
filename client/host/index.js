@@ -196,7 +196,7 @@ socket.on('data', (data) => {
   if (!controllers[data.id].isAlive){
 	  return
   }
-  const magCoeff = 0.07
+  const magCoeff = 0.15
 
   const sphereBody = controllers[data.id].body
 
@@ -219,7 +219,8 @@ socket.on('data', (data) => {
 
   const rotation = alpha + offset + (direction * phi)
   const actualAngle = rotation + (Math.PI / 2)
-  const magnitude = magCoeff
+  const magnitude = magCoeff * Math.sin(theta)
+  console.log(magnitude)
 
   sphereBody.applyImpulse(new Vec3(magnitude * Math.cos(actualAngle), 0, -magnitude * Math.sin(actualAngle)), sphereBody.position)
 })
