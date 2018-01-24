@@ -17,7 +17,7 @@ socket.emit('init', {
 // Cannon setup
 const timestep = 1/60
 const world = new World()
-world.gravity.set(0,0,-9.81)
+world.gravity.set(0,-9.81,0)
 world.bradphase = new NaiveBroadphase()
 world.solver.iterations = 10
 
