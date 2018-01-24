@@ -52,13 +52,13 @@ stageBody.quaternion.setFromAxisAngle(new Vec3(1, 0, 0), Math.PI / 2)
 world.add(stageBody)
 
 // Three.js setup
-const ambLight = new THREE.AmbientLight(0xaaaaaa, 1)
+const ambLight = new THREE.AmbientLight(0xaaaaaa, 0.5)
 const pointLight = new THREE.PointLight(0xff0000, 1, 100)
 const scene = new THREE.Scene()
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000000)
 const renderer = new THREE.WebGLRenderer()
 
-pointLight.position.set(0, 2, -10)
+pointLight.position.set(0, 2, -5)
 scene.background = new THREE.Color(0x6aa2fc)
 scene.add(ambLight)
 scene.add(pointLight)
@@ -121,7 +121,7 @@ function checkGameWin () {
 			}
 		}
 		if (winningPlayerName){
-			$('#winBannerHeader').innerHTML = `Player ${winningPlayerName} has won!`
+			$('#winBannerHeader').innerHTML = `${winningPlayerName} wins!`
 		}
 		$('#winBanner').classList.remove('hide')
 	}
@@ -160,7 +160,7 @@ socket.on('join', (data) => {
 
   // Three.js object
   const geometry = new THREE.SphereGeometry(size)
-  const material = new THREE.MeshLambertMaterial({ color: data.color })
+  const material = new THREE.MeshStandardMaterial({ color: data.color })
   const sphere = new THREE.Mesh(geometry, material)
 
   sphere.position.set(startLocations[playerCount-1][0], size, startLocations[playerCount-1][1])

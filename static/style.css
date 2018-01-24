@@ -47,10 +47,15 @@ input[type="submit"].disabled {
   color: #ddd;
 }
 
-.win-banner{
+.win-banner {
 	position: absolute;
 	z-index: 100;
-	width: auto;
+  font-size: 2em;
+	margin: 30px auto;
+  width: 80%;
+  background-color: rgba(255,255,255,0.1);
+  font-family: 'Roboto', sans-serif;
+  color: #222;
 	right: 0;
 	left: 0;
 }
