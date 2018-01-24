@@ -1,4 +1,9 @@
+@import url('https://fonts.googleapis.com/css?family=Pacifico|Roboto:100');
+
 body {
+  text-align: center;
+  font-family: 'Roboto', sans-serif;
+  font-size: 120%;
   margin: 0;
 }
 canvas {
@@ -7,4 +12,30 @@ canvas {
 } 
 .hide {
   display: none;
+}
+h1 {
+  font-size: 3em;
+  font-family: 'Pacifico', cursive;
+  color: #14c4ff;
+}
+input[type="text"] {
+  padding: 4px;
+  font-size: 1em;
+  margin-bottom: 12px;
+  background-color: transparent;
+  font-family: 'Roboto', sans-serif;
+  text-align: center;
+  border: 0;
+  border-bottom: 1px solid #14c4ff;
+  color: #14c4ff;
+}
+input[type="submit"] {
+  font-size: 1em;
+  margin: 5px;
+  font-family: 'Roboto', sans-serif;
+  background-color: transparent;
+  background-image: none;
+  border-radius: 5px;
+  border: 1px solid #14c4ff;
+  color: #14c4ff;
 }

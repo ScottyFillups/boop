@@ -2,17 +2,20 @@
 <html>
   <head>
     <title>Boop!</title>
+    <link rel="stylesheet" href="/style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   <body>
     <h1>Boop!</h1>
     <form id="invite-form" action="">
       <p>Join a room: </p>
-      <input id="roomid-input" type="text">
-      <input type="submit" value="Join">
+      <input id="roomid-input" placeholder="Invite code" type="text"><br>
+      <input type="submit" value="Play!">
     </form>
+    <br>
     <form action="/create" method="GET">
-      <p>Create a new room</p>
-      <input type="submit" value="Create">
+      <p>Or, you can...</p>
+      <input type="submit" value="Create a room!">
     </form>
     <script src="/game/bundle.home.js"></script>
   </body>
