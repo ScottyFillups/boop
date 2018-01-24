@@ -46,3 +46,11 @@ input[type="submit"].disabled {
   border-color: #ddd;
   color: #ddd;
 }
+
+.win-banner{
+	position: absolute;
+	z-index: 100;
+	width: auto;
+	right: 0;
+	left: 0;
+}
