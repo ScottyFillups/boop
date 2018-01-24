@@ -1,4 +1,6 @@
 function gamify (io, redisClient) {
+  const maxConnections = 5
+
   io.on('connection', (socket) => {
     socket.on('init', (data) => {
       let hostId
@@ -8,7 +10,11 @@ function gamify (io, redisClient) {
       clientType = type
 
       if (type === 'host') {
-        redisClient.set(roomId, socket.id)
+        redisClient.set(roomId, JSON.stringify({
+          id: socket.id,
+          locked: false,
+          count: 1
+        }))
 
         socket.on('disconnect', () => {
           redisClient.set(roomId, '')
@@ -16,10 +22,22 @@ function gamify (io, redisClient) {
         })
       } else {
         redisClient.get(roomId, (err, reply) => {
+          console.log(reply)
+          const obj = JSON.parse(reply)
+
           if (err) throw err
 
-          if (reply && io.sockets.sockets[reply]) {
-            hostId = reply
+          if (obj.count >= maxConnections || obj.locked) {
+            console.log('no join emitted')
+            redisClient.set(roomId, JSON.stringify(Object.assign(obj, { locked: true })))
+            return
+          }
+
+          if (reply !== '' && io.sockets.sockets[obj.id]) {
+            redisClient.set(roomId, JSON.stringify(Object.assign(obj, {
+              count: obj.count + 1
+            })))
+            hostId = obj.id
             io.sockets.sockets[hostId].emit('join', socket.id)
           }
         })
@@ -34,7 +52,6 @@ function gamify (io, redisClient) {
         })
       }
     })
-
   })
 }
 
