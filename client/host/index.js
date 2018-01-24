@@ -67,6 +67,25 @@ stageMaterial.vertexColors = THREE.FaceColors
 const stage = new THREE.Mesh(stageGeometry, stageMaterial)
 scene.add(stage)
 
+// Test sphere
+const testSize = 0.5
+
+// Cannon object
+const testSphereShape = new Sphere(testSize)
+const testSphereBody = new Body({mass: 1, material: sphereMaterial})
+testSphereBody.addShape(testSphereShape)
+world.add(testSphereBody)
+
+// Three.js object
+const geometry = new THREE.SphereGeometry(testSize)
+const material = new THREE.MeshNormalMaterial()
+const testSphere = new THREE.Mesh(geometry, material)
+
+testSphere.position.set(0, 1, 0)
+testSphereBody.position.copy(testSphere.position)
+
+scene.add(testSphere)
+
 camera.position.z = 15
 camera.position.y = 3
 renderer.setSize(window.innerWidth, window.innerHeight)
@@ -81,6 +100,8 @@ function updatePhysics () {
       sphere.quaternion.copy(sphereBody.quaternion)
     }
   }
+	testSphere.position.copy(testSphereBody.position)
+	testSphere.quaternion.copy(testSphereBody.quaternion)
 }
 
 function animate () {
