@@ -38,6 +38,7 @@ const stageHeight = 0.25
 const stageShape = new Cylinder(stageRadius, stageRadius, stageHeight, 32)
 const stageBody = new Body({mass: 0, material: groundMaterial})
 stageBody.addShape(stageShape)
+stageBody.quaternion.setFromAxisAngle(new Vec3(1,0,0), Math.PI/2)
 world.add(stageBody)
 
 // Three.js setup
