@@ -68,10 +68,10 @@ function updatePhysics(){
 	world.step(timestep)
 	for (let key in controllers){
 		if (controllers.hasOwnProperty(key)){
-			const cube = controllers[key].mesh
-			const cubeBody = controllers[key].body
-			cube.position.copy(cubeBody.position)
-			cube.quaternion.copy(cubeBody.quaternion)
+			const sphere = controllers[key].mesh
+			const sphereBody = controllers[key].body
+			sphere.position.copy(sphereBody.position)
+			sphere.quaternion.copy(sphereBody.quaternion)
 		}
 	}
 }
@@ -87,35 +87,33 @@ animate()
 socket.on('join', (id) => {
 
   const size = 0.5
-  // Create cannon object
-  const cubeShape = new Box(new Vec3(size,size,size))
-  const cubeBody = new Body({mass: 1, material: groundMaterial})
-  cubeBody.addShape(cubeShape)
-  world.add(cubeBody)
 
-  // Create Three.js object
-  const geometry = new THREE.BoxGeometry(size*2,size*2,size*2)
-  const material = new THREE.MeshNormalMaterial()
-  const cube = new THREE.Mesh(geometry, material)
+	// Cannon object
+  const sphereShape = new Sphere(size)
+  const sphereBody = new Body({mass: 1, material: groundMaterial})
+  sphereBody.addShape(sphereShape)
+	world.add(sphereBody)
 
-  cube.position.set(rng(),10, 0)
-  cubeBody.position.copy(cube.position)
+	// Three.js object
+	const geometry = new THREE.SphereGeometry(size)
+	const material = new THREE.MeshNormalMaterial()
+	const sphere = new THREE.Mesh(geometry, material)
 
-  scene.add(cube)
+	sphere.position.set(rng(),10,rng())
+	sphereBody.position.copy(sphere.position)
+
+	scene.add(sphere)
 
   controllers[id] = {
-    mesh: cube,
-	body: cubeBody,
+    mesh: sphere,
+		body: sphereBody,
   }
 })
 
 socket.on('data', (data) => {
-  const cube = controllers[data.id].mesh
+  const sphere = controllers[data.id].mesh
 
   console.log(data.beta, data.gamma, data.alpha)
-  //cube.rotation.x = data.beta
-  //cube.rotation.y = data.gamma
-  //cube.rotation.z = data.alpha
 })
 
 console.log(`I am the host! ${getRoomId()}`)
