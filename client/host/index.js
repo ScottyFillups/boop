@@ -3,6 +3,7 @@ import { ContactMaterial, Material, Vec3, World, NaiveBroadphase, Plane, Body, S
 import * as io from 'socket.io-client'
 import { getType, getRoomId } from '../util/url-extractor'
 import { random } from '../util/math'
+import $ from '../util/dom'
 
 const controllers = {}
 
@@ -62,7 +63,6 @@ scene.add(stage)
 camera.position.z = 10
 camera.position.y = 3
 renderer.setSize(window.innerWidth, window.innerHeight)
-document.body.appendChild(renderer.domElement)
 
 function updatePhysics(){
 	world.step(timestep)
@@ -82,9 +82,11 @@ function animate () {
   renderer.render(scene, camera)
 }
 
-animate()
 
 socket.on('join', (id) => {
+  const $p = document.createElement('p')
+  $p.innerHTML = `Controller ${id} has joined`
+  $('#entry').appendChild($p)
 
   const size = 0.5
   // Create cannon object
@@ -105,7 +107,7 @@ socket.on('join', (id) => {
 
   controllers[id] = {
     mesh: cube,
-	body: cubeBody,
+    body: cubeBody,
   }
 })
 
@@ -119,3 +121,11 @@ socket.on('data', (data) => {
 })
 
 console.log(`I am the host! ${getRoomId()}`)
+
+
+$('#play-game').addEventListener('submit', (e) => {
+  e.preventDefault()
+  document.body.appendChild(renderer.domElement)
+  $('#dom').classList.add('hide')
+  animate()
+})
