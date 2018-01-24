@@ -31,6 +31,10 @@ function gamify (io, redisClient) {
       } else {
         redisClient.get(roomId, (err, reply) => {
           console.log(reply)
+          if (!reply) {
+            return
+          }
+
           const obj = JSON.parse(reply)
 
           if (err) throw err
