@@ -1,10 +1,10 @@
 import * as io from 'socket.io-client'
 import { GyroNorm } from '../vendor/gyronorm.complete.min'
 import { getType, getRoomId } from '../util/url-extractor'
+import { toRadians } from '../util/math'
 
 const socket = io('/')
 const gn = new GyroNorm()
-const toRadians = x => Math.PI * x / 180
 
 socket.emit('init', {
   type: getType(),
