@@ -17,12 +17,16 @@ function gamify (io, redisClient) {
       } else {
         redisClient.get(roomId, (err, reply) => {
           if (err) throw err
-          hostId = reply
+
+          if (reply && io.sockets.sockets[reply]) {
+            hostId = reply
+            io.sockets.sockets[hostId].emit('join', socket.id)
+          }
         })
 
         socket.on('data', (data) => {
           if (hostId && io.sockets.sockets[hostId]) {
-            io.sockets.sockets[hostId].emit('data', data)
+            io.sockets.sockets[hostId].emit('data', Object.assign(data, { id: socket.id }))
           }
         })
         socket.on('die', () => {
