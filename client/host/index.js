@@ -1,8 +1,10 @@
 import * as THREE from 'three'
 import * as io from 'socket.io-client'
 import { getType, getRoomId } from '../util/url-extractor'
+import { random } from '../util/math'
 
 const socket = io('/')
+const rng = random.bind(null, -3, 3)
 
 socket.emit('init', {
   type: getType(),
@@ -16,12 +18,14 @@ const renderer = new THREE.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
 
-const geometry = new THREE.BoxGeometry(2, 2, 2)
+const geometry = new THREE.BoxGeometry(1, 1, 1)
 const material = new THREE.MeshNormalMaterial()
 const cube = new THREE.Mesh(geometry, material)
 
+cube.position.set(rng(), rng(), rng())
+
 scene.add(cube)
-camera.position.z = 5
+camera.position.z = 10
 
 function animate () {
   requestAnimationFrame(animate)
