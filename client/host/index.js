@@ -225,7 +225,7 @@ socket.on('data', (data) => {
   const rotation = alpha + offset + (direction * phi)
   const actualAngle = rotation + (Math.PI / 2)
   const magnitude = magCoeff * Math.sin(theta)
-  console.log(magnitude)
+  // console.log(magnitude)
 
   sphereBody.applyImpulse(new Vec3(magnitude * Math.cos(actualAngle), 0, -magnitude * Math.sin(actualAngle)), sphereBody.position)
 })
