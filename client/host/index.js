@@ -105,8 +105,8 @@ socket.on('join', (data) => {
   scene.add(sphere)
 
   controllers[data.id] = {
-    mesh: cube,
-    body: cubeBody
+    mesh: sphere,
+    body: sphereBody
   }
 })
 
@@ -115,8 +115,7 @@ socket.on('data', (data) => {
 
   const sphereBody = controllers[data.id].body
 
-  //console.log(data.beta, data.gamma, data.alpha)
-
+	const alpha = data.alpha
 	const betaAbs = Math.abs(data.beta)
 	const gammaAbs = Math.abs(data.gamma)
 
@@ -133,7 +132,7 @@ socket.on('data', (data) => {
 	var offset = data.gamma > 0 ? -Math.PI/2 : Math.PI/2;
 	var direction = (data.beta > 0 && data.gamma < 0) || (data.beta < 0 && data.gamma > 0) ? 1 : -1;
 
-	const rotation = offset + (direction * phi)
+	const rotation = alpha + offset + (direction * phi)
 	const actualAngle = rotation + (Math.PI/2)
 
 	sphereBody.applyImpulse(new Vec3(magnitude * Math.cos(actualAngle), 0, -magnitude * Math.sin(actualAngle)), sphereBody.position)
