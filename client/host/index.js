@@ -239,6 +239,5 @@ $('#play-game').addEventListener('submit', (e) => {
   e.preventDefault()
   document.body.appendChild(renderer.domElement)
   $('#dom').classList.add('hide')
-  socket.emit('lock')
   startGame()
 })
